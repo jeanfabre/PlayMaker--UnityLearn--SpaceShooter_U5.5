@@ -36,3 +36,5 @@ Builds/PlayMakerVersion.app
 PlayMaker.dll
 PlayMaker.dll.mdb
 PlayMaker.dll.mdb.meta
+.vscode
+Assets/VSCode
