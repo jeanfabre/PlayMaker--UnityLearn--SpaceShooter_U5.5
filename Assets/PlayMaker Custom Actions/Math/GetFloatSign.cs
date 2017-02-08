@@ -1,53 +1,65 @@
-﻿// (c) Copyright HutongGames, LLC 2010-2017. All rights reserved.
+﻿// (c) Copyright HutongGames, LLC 2010-2016. All rights reserved.
+/*--- __ECO__ __PLAYMAKER__ __ACTION__ 
+EcoMetaStart
+{
+	"script dependancies":[
+	   "Assets/PlayMaker Custom Actions/__internal/FsmStateActionAdvanced.cs"
+	   ]
+}
+EcoMetaEnd
+---*/
 
 using UnityEngine;
 
 namespace HutongGames.PlayMaker.Actions
 {
 	[ActionCategory(ActionCategory.Math)]
-	[Tooltip("Gets the sign value of a float")]
-	public class GetFloatSign : FsmStateAction
+	[Tooltip("Store sign of a float as -1 or 1.")]
+	public class GetFloatSign : FsmStateActionAdvanced
 	{
 		[RequiredField]
-		[UIHint(UIHint.Variable)]
-		[Tooltip("The float variable to test.")]
-		public FsmFloat floatValue;
+		[Tooltip("The float variable.")]
+		public FsmFloat floatVariable;
 
-		[Tooltip("The Sign of the float value")]
+
+		[UIHint(UIHint.Variable)]
+		[Tooltip("The sign as float. -1f or 1f")]
 		public FsmFloat sign;
 
-		[Tooltip("Repeat every frame. Useful if the variable is changing and you're waiting for a particular result.")]
-		public bool everyFrame;
+
+		[UIHint(UIHint.Variable)]
+		[Tooltip("The sign as int. -1 or 1")]
+		public FsmInt signAsInt;
+
 
 		public override void Reset()
 		{
-			floatValue = 0f;
-			sign = null;
-			everyFrame = false;
-		}
+			base.Reset ();
 
+			floatVariable = new FsmFloat() {UseVariable =true};
+			sign = null;
+			signAsInt = null;
+
+		}
+		
 		public override void OnEnter()
 		{
-			DoSignTest();
-
+			OnActionUpdate ();
+			
 			if (!everyFrame)
 			{
 				Finish();
 			}
 		}
-
-		public override void OnUpdate()
+		
+		public override void OnActionUpdate()
 		{
-			DoSignTest();
-		}
 
-		void DoSignTest()
-		{
-			if (floatValue == null)
-			{
-				return;
-			}
-			sign.Value = Mathf.Sign (floatValue.Value);
+
+
+			if (!sign.IsNone) sign.Value = Mathf.Sign(floatVariable.Value);
+
+			if (!signAsInt.IsNone) signAsInt.Value = floatVariable.Value == 0f ?1:System.Math.Sign(floatVariable.Value);
 		}
 
 	}
